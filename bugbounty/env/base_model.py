@@ -1,6 +1,6 @@
 import json
 
-from bugbounty.database import db
+from bugbounty.env.extensions import db
 from bugbounty.env.util import AlchemyEncoder
 
 
