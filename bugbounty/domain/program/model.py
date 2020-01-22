@@ -1,4 +1,4 @@
-from bugbounty import db
+from bugbounty.env.extensions import db
 from bugbounty.env.base_model import BaseModel
 
 
