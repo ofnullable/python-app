@@ -3,10 +3,10 @@ from flask import Blueprint
 from .models import User
 from bugbounty.env.database import db
 
-blueprint = Blueprint('user', __name__)
+bp = Blueprint('user', __name__)
 
 
-@blueprint.route('/api/users', methods=('POST',))
+@bp.route('/api/users', methods=('POST',))
 def register_user(username, email, password, **kwargs):
     try:
         user = User(username=username, email=email, password=password, **kwargs).save()
