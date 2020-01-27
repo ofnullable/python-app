@@ -1,13 +1,10 @@
-import json
-
 from sqlalchemy.orm import relationship
 
 from .extensions import db
-from .util import AlchemyEncoder
 
-relationship = relationship
-Column = db.Column
 Model = db.Model
+Column = db.Column
+relationship = relationship
 
 
 class BaseModel:
@@ -24,15 +21,11 @@ class BaseModel:
         ):
             return cls.query.get(int(record_id))
 
-    def to_json(self, show=None):
-        return json.dumps(self, cls=AlchemyEncoder)
-
 
 def reference_col(tablename, nullable=False, pk_name='id', **kwargs):
     """Column that adds primary key foreign key reference.
 
     Usage: ::
-
         category_id = reference_col('category')
         category = relationship('Category', backref='categories')
     """

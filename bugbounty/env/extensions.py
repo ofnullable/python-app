@@ -32,7 +32,7 @@ class CRUDMixin(Model):
         return commit and db.session.commit()
 
 
-bcrypt = Bcrypt()
-db = SQLAlchemy(model_class=CRUDMixin)
-migrate = Migrate()
 cors = CORS()
+bcrypt = Bcrypt()
+migrate = Migrate()
+db = SQLAlchemy(model_class=CRUDMixin)
