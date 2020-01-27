@@ -1,7 +1,7 @@
 import datetime as dt
 
-from bugbounty.env.extensions import bcrypt
 from bugbounty.env.database import db, BaseModel, Column, Model
+from bugbounty.env.extensions import bcrypt
 
 
 class User(BaseModel, Model):
@@ -10,10 +10,10 @@ class User(BaseModel, Model):
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(100), unique=True, nullable=False)
     password = Column(db.Binary(128), nullable=True)
+    image = Column(db.String(120))
+    is_vendor = db.Column(db.Boolean, nullable=False)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    image = Column(db.String(120), nullable=True)
-    is_vendor = db.Column(db.Boolean, unique=False, nullable=False)
 
     def __init__(self, username, email, password=None, **kwargs):
         """Create instance."""
