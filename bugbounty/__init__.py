@@ -1,9 +1,9 @@
 from flask import Flask
 
-from bugbounty.settings import DevConfig
-from bugbounty.env.extensions import db, bcrypt, cors, migrate
-from bugbounty.domain.user.controller import bp as user_bp
 from bugbounty.domain.program.controller import bp as program_bp
+from bugbounty.domain.user.controller import bp as user_bp
+from bugbounty.env.extensions import db, bcrypt, cors, migrate
+from bugbounty.settings import DevConfig
 
 
 def create_app(config=DevConfig):

@@ -7,17 +7,50 @@ class RegisterUser(CamelCaseSchema):
     username = fields.Str()
     email = fields.Email()
     password = fields.Str()
-    is_vendor = fields.Bool()
+
+
+class RegisterHacker(RegisterUser):
+    pass
+
+
+class RegisterVendor(RegisterUser):
+    vendor_name = fields.Str()
+    vendor_info = fields.Str()
+
+
+class UserProfile(CamelCaseSchema):
+    image = fields.Str()
+
+
+class HackerProfile(UserProfile):
+    score = fields.Int()
+
+
+class VendorProfile(UserProfile):
+    vendor_name = fields.Str()
+    vendor_info = fields.Str()
 
 
 class UserResponse(CamelCaseSchema):
+    id = fields.Int()
     username = fields.Str()
     email = fields.Email()
-    image = fields.Url()
     is_vendor = fields.Bool()
-    createdAt = fields.DateTime(attribute='created_at', dump_only=True)
-    updatedAt = fields.DateTime(attribute='updated_at')
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime()
 
 
-register_user = RegisterUser()
-user_response = UserResponse()
+class HackerResponse(UserResponse):
+    profile = fields.Nested(HackerProfile)
+
+
+class VendorResponse(UserResponse):
+    profile = fields.Nested(VendorProfile)
+
+
+register_hacker = RegisterHacker()
+hacker_response = HackerResponse()
+hackers_response = HackerResponse(many=True)
+
+register_vendor = RegisterVendor()
+vendor_response = VendorResponse()
