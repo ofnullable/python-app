@@ -1,3 +1,5 @@
+import datetime as dt
+
 from sqlalchemy.orm import relationship
 
 from .extensions import db
@@ -22,6 +24,13 @@ class BaseModel:
             return cls.query.get(int(record_id))
 
 
+class BaseTimeModel(BaseModel):
+    __table_args__ = {'extend_existing': True}
+
+    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+
 def reference_col(tablename, nullable=False, pk_name='id', **kwargs):
     """Column that adds primary key foreign key reference.
 
@@ -30,5 +39,5 @@ def reference_col(tablename, nullable=False, pk_name='id', **kwargs):
         category = relationship('Category', backref='categories')
     """
     return db.Column(
-        db.ForeignKey('{0}.{1}'.format(tablename, pk_name)),
-        nullable=nullable, **kwargs)
+        db.ForeignKey(
+            '{0}.{1}'.format(tablename, pk_name)), nullable=nullable, **kwargs)
