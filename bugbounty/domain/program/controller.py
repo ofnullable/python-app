@@ -1,11 +1,13 @@
 from flask import Blueprint
+from flask_apispec import use_kwargs, marshal_with
 
 from .models import Program
-from bugbounty.env.database import db
+from .serializer import programs_response
 
 bp = Blueprint('programs', __name__)
 
 
-@bp.route('/api/programs', methods=['GET'])
+@bp.route('/api/programs', methods=('GET',))
+@marshal_with(programs_response)
 def get_programs():
-    return {'programs': Program.query.all()}
+    return Program.query.all()
