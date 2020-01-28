@@ -14,7 +14,8 @@ class User(Model, BaseTimeModel):
     profile = relationship('Profile', uselist=False, back_populates='user',
                            lazy=False)
 
-    def __init__(self, password=None, vendor_name=None, vendor_info=None, **kwargs):
+    def __init__(self, password=None, vendor_name=None, vendor_info=None,
+                 **kwargs):
         super(User, self).__init__(**kwargs)
         self.set_profile(vendor_name=vendor_name,
                          vendor_info=vendor_info, **kwargs)
@@ -53,6 +54,9 @@ class Profile(Model, BaseModel):
         'polymorphic_on': type
     }
 
+    def __init__(self, **kwargs):
+        super(Profile, self).__init__(**kwargs)
+
 
 class HackerProfile(Profile):
     __tablename__ = None
@@ -62,9 +66,6 @@ class HackerProfile(Profile):
     __mapper_args__ = {
         'polymorphic_identity': 'hacker_profile',
     }
-
-    def __init__(self, **kwargs):
-        super(HackerProfile, self).__init__(**kwargs)
 
 
 class VendorProfile(Profile):
@@ -76,6 +77,3 @@ class VendorProfile(Profile):
     __mapper_args__ = {
         'polymorphic_identity': 'vendor_profile',
     }
-
-    def __init__(self, **kwargs):
-        super(VendorProfile, self).__init__(**kwargs)

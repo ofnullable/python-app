@@ -4,6 +4,7 @@ from flask_apispec import use_kwargs, marshal_with
 from .models import User
 from .serializer import register_hacker, hacker_response, register_vendor, \
     vendor_response
+from ..program.models import Program
 
 bp = Blueprint('user', __name__)
 
@@ -35,6 +36,8 @@ def get_user(username):
 def register_vendor(**kwargs):
     try:
         vendor = User(is_vendor=True, **kwargs).save()
+        Program(vendor=vendor).save()
+
         return vendor
     except Exception:
         raise Exception('Fail to register user')
