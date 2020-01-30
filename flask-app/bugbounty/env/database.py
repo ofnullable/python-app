@@ -1,6 +1,5 @@
-import datetime as dt
-
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from .extensions import db
 
@@ -27,8 +26,8 @@ class BaseModel:
 class BaseTimeModel(BaseModel):
     __table_args__ = {'extend_existing': True}
 
-    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    created_at = Column(db.DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
 def reference_col(tablename, nullable=False, pk_name='id', **kwargs):

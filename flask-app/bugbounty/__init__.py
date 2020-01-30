@@ -1,6 +1,7 @@
 from flask import Flask
+from flask_apispec import FlaskApiSpec
 
-from bugbounty.domain.program.controller import bp as program_bp
+from bugbounty.domain.program.controller import bp as program_bp, get_programs
 from bugbounty.domain.user.controller import bp as user_bp
 from bugbounty.env.extensions import db, bcrypt, cors, migrate
 from bugbounty.settings import DevConfig
@@ -15,6 +16,8 @@ def create_app(config=DevConfig):
 
     register_extensions(app)
     register_blueprints(app)
+
+    register_router_documents(app)
 
     return app
 
@@ -38,3 +41,9 @@ def register_blueprints(app):
 
     app.register_blueprint(user_bp)
     app.register_blueprint(program_bp)
+
+
+def register_router_documents(app):
+    print('register api documentations')
+    spec = FlaskApiSpec(app=app)
+    spec.register_existing_resources()

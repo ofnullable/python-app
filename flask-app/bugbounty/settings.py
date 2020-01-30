@@ -13,7 +13,7 @@ class DevConfig(Config):
 
 class TestConfig(Config):
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = 'ssmysql+pymysql://developer:1234@192.168.32.30:3306/bugbounty_test?charset=utf8mb4'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://developer:1234@192.168.32.30:3306/bugbounty_test?charset=utf8mb4'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
