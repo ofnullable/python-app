@@ -20,9 +20,6 @@ class RegisterVendor(RegisterUser):
 
 class UserProfile(CamelCaseSchema):
     image = fields.Str()
-
-
-class HackerProfile(UserProfile):
     score = fields.Int()
 
 
@@ -41,7 +38,7 @@ class UserResponse(CamelCaseSchema):
 
 
 class HackerResponse(UserResponse):
-    profile = fields.Nested(HackerProfile)
+    profile = fields.Nested(UserProfile)
 
 
 class VendorResponse(UserResponse):

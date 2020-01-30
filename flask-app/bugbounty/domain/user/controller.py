@@ -2,11 +2,10 @@ from flask import Blueprint
 from flask_apispec import use_kwargs, marshal_with
 
 from .models import User
-from .serializer import register_hacker, hacker_response, register_vendor, \
-    vendor_response
+from .serializer import register_hacker, hacker_response, register_vendor, vendor_response
 from ..program.models import Program
 
-bp = Blueprint('user', __name__)
+bp = Blueprint('users', __name__)
 
 
 @bp.route('/api/user', methods=('POST',))
@@ -15,7 +14,7 @@ bp = Blueprint('user', __name__)
 def register_user(**kwargs):
     try:
         user = User(is_vendor=False, **kwargs).save()
-        return user
+        return user, 201
     except Exception:
         raise Exception('Fail to register user')
 
@@ -23,7 +22,7 @@ def register_user(**kwargs):
 @bp.route('/api/user/<username>', methods=('GET',))
 @marshal_with(hacker_response)
 def get_user(username):
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username, is_vendor=False).first()
     if user:
         return user
     else:
@@ -37,7 +36,6 @@ def register_vendor(**kwargs):
     try:
         vendor = User(is_vendor=True, **kwargs).save()
         Program(vendor=vendor).save()
-
-        return vendor
+        return vendor, 201
     except Exception:
         raise Exception('Fail to register user')

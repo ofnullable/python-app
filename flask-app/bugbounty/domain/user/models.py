@@ -1,5 +1,4 @@
-from bugbounty.env.database import db, BaseModel, Column, Model, BaseTimeModel, \
-    relationship, reference_col
+from bugbounty.env.database import db, BaseModel, Column, Model, BaseTimeModel, relationship, reference_col
 from bugbounty.env.extensions import bcrypt
 
 
@@ -11,30 +10,27 @@ class User(Model, BaseTimeModel):
     password = Column(db.Binary(128), nullable=True)
     is_vendor = Column(db.Boolean, nullable=False)
 
-    profile = relationship('Profile', uselist=False, back_populates='user',
-                           lazy=False)
+    profile = relationship('Profile', uselist=False, back_populates='user', lazy=False)
 
-    def __init__(self, password=None, vendor_name=None, vendor_info=None,
-                 **kwargs):
+    def __init__(self, vendor_name=None, vendor_info=None, password=None, **kwargs):
         super(User, self).__init__(**kwargs)
-        self.set_profile(vendor_name=vendor_name,
-                         vendor_info=vendor_info, **kwargs)
-        if password:
-            self.set_password(password)
-        else:
-            self.password = None
+
+        self.set_password(password)
+        self.set_profile(vendor_name=vendor_name, vendor_info=vendor_info, **kwargs)
 
     def set_profile(self, is_vendor, **kwargs):
         if is_vendor:
             vendor_name = kwargs['vendor_name']
             vendor_info = kwargs['vendor_info']
-            self.profile = VendorProfile(vendor_name=vendor_name,
-                                         vendor_info=vendor_info)
+            self.profile = VendorProfile(vendor_name=vendor_name, vendor_info=vendor_info)
         else:
-            self.profile = HackerProfile(score=0)
+            self.profile = Profile()
 
     def set_password(self, password):
-        self.password = bcrypt.generate_password_hash(password)
+        if password:
+            self.password = bcrypt.generate_password_hash(password)
+        else:
+            self.password = None
 
     def check_password(self, value):
         return bcrypt.check_password_hash(self.password, value)
