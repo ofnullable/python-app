@@ -10,27 +10,29 @@ class Program(Model, BaseModel):
     is_proceeding = Column(db.Boolean, nullable=False, default=False)
 
     vendor_id = reference_col('user', nullable=False)
-    vendor = relationship('User', backref='program', lazy=True)
+    vendor = relationship('User', lazy=True)
 
-    policy = relationship('ProgramPolicy', back_populates='program', lazy=True)
+    policy = relationship('ProgramPolicy', back_populates='program', lazy=False)
 
     def __init__(self, vendor, **kwargs):
-        if not kwargs.get('title'):
-            super(Program, self).__init__(vendor=vendor, title=vendor.profile.vendor_name, **kwargs)
-        else:
-            super(Program, self).__init__(vendor=vendor, **kwargs)
+        title = kwargs.get('title')
+        if not title:
+            title = vendor.profile.vendor_name
+        super(Program, self).__init__(vendor=vendor, title=title, **kwargs)
 
 
 class ProgramPolicy(Model, BaseTimeModel):
     __tablename__ = 'program_policy'
 
-    policy = Column(db.LargeBinary, nullable=False)
+    contents = Column(db.LargeBinary, nullable=False)
 
-    registrant_id = reference_col('user', nullable=False)
-    registrant = relationship('User', lazy=True)
+    writer_id = reference_col('user', nullable=False)
+    writer = relationship('User', lazy=True)
 
     program_id = reference_col('program', nullable=False)
-    program = relationship('Program', back_populates='policy', lazy=True)
+    program = relationship('Program', back_populates='policy', lazy=False)
 
     def __init__(self, **kwargs):
-        super(ProgramPolicy, self).__init__(**kwargs)
+        contents = kwargs.pop('contents')
+
+        super(ProgramPolicy, self).__init__(contents=bytes(contents, 'utf-8'), **kwargs)
