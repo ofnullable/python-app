@@ -10,7 +10,7 @@ class User(Model, BaseTimeModel):
     password = Column(db.Binary(128), nullable=True)
     is_vendor = Column(db.Boolean, nullable=False)
 
-    profile = relationship('Profile', uselist=False, back_populates='user', lazy=False)
+    profile = relationship('Profile', uselist=False, lazy='joined')
 
     def __init__(self, vendor_name=None, vendor_info=None, password=None, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -20,6 +20,7 @@ class User(Model, BaseTimeModel):
 
     def set_profile(self, is_vendor, **kwargs):
         if is_vendor:
+            # if not vendor_name or not vendor_info raise KeyError
             vendor_name = kwargs['vendor_name']
             vendor_info = kwargs['vendor_info']
             self.profile = VendorProfile(vendor_name=vendor_name, vendor_info=vendor_info)
@@ -39,15 +40,15 @@ class User(Model, BaseTimeModel):
 class Profile(Model, BaseModel):
     __tablename__ = 'user_profile'
 
+    user_id = reference_col('user', nullable=False)
+    user = relationship('User', uselist=False)
     image = Column(db.String(120))
     type = Column(db.String(50))
 
-    user_id = reference_col('user', nullable=False)
-    user = relationship('User', back_populates='profile')
-
     __mapper_args__ = {
         'polymorphic_identity': 'profile',
-        'polymorphic_on': type
+        'polymorphic_on': type,
+        'with_polymorphic': '*'
     }
 
     def __init__(self, **kwargs):
@@ -61,15 +62,17 @@ class HackerProfile(Profile):
 
     __mapper_args__ = {
         'polymorphic_identity': 'hacker_profile',
+        'polymorphic_load': 'inline',
     }
 
 
 class VendorProfile(Profile):
     __tablename__ = None
 
-    vendor_name = Column(db.String(120))
+    vendor_name = Column(db.String(120), unique=True)
     vendor_info = Column(db.String(240))
 
     __mapper_args__ = {
         'polymorphic_identity': 'vendor_profile',
+        'polymorphic_load': 'inline',
     }

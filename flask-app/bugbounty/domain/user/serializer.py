@@ -47,7 +47,6 @@ class VendorResponse(UserResponse):
 
 register_hacker = RegisterHacker()
 hacker_response = HackerResponse()
-hackers_response = HackerResponse(many=True)
 
 register_vendor = RegisterVendor()
 vendor_response = VendorResponse()
