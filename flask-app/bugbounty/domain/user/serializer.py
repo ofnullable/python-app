@@ -1,12 +1,12 @@
 from marshmallow import fields
 
-from bugbounty.utils import CamelCaseSchema
+from bugbounty.utils import CamelSchema
 
 
-class RegisterUser(CamelCaseSchema):
-    username = fields.Str()
-    email = fields.Email()
-    password = fields.Str()
+class RegisterUser(CamelSchema):
+    username = fields.Str(required=True)
+    email = fields.Email(required=True)
+    password = fields.Str(required=True)
 
 
 class RegisterHacker(RegisterUser):
@@ -18,22 +18,22 @@ class RegisterVendor(RegisterUser):
     vendor_info = fields.Str()
 
 
-class UserProfile(CamelCaseSchema):
+class UserProfile(CamelSchema):
     image = fields.Str()
     score = fields.Int()
 
 
 class VendorProfile(UserProfile):
-    vendor_name = fields.Str()
-    vendor_info = fields.Str()
+    vendor_name = fields.Str(required=True)
+    vendor_info = fields.Str(required=False)
 
 
-class UserResponse(CamelCaseSchema):
+class UserResponse(CamelSchema):
     id = fields.Int()
     username = fields.Str()
     email = fields.Email()
     is_vendor = fields.Bool()
-    created_at = fields.DateTime(dump_only=True)
+    created_at = fields.DateTime()
     updated_at = fields.DateTime()
 
 

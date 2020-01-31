@@ -12,7 +12,7 @@ class Program(Model, BaseModel):
     vendor_id = reference_col('user', nullable=False)
     vendor = relationship('User', lazy=True)
 
-    policy = relationship('ProgramPolicy', back_populates='program', lazy=False)
+    policies = relationship('ProgramPolicy', backref='program', lazy='joined', order_by='ProgramPolicy.id.desc()')
 
     def __init__(self, vendor, **kwargs):
         title = kwargs.get('title')
@@ -30,7 +30,6 @@ class ProgramPolicy(Model, BaseTimeModel):
     writer = relationship('User', lazy=True)
 
     program_id = reference_col('program', nullable=False)
-    program = relationship('Program', back_populates='policy', lazy=False)
 
     def __init__(self, **kwargs):
         contents = kwargs.pop('contents')

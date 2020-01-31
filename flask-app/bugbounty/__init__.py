@@ -46,6 +46,14 @@ def register_blueprints(app):
 
 
 def register_error_handler(app):
+    @app.errorhandler(404)
+    def not_found_handler(_):
+        return {'message': 'API not found'}, 404
+
+    @app.errorhandler(422)
+    def bad_request_handler(e):
+        return {'message': 'wrong or missing request property', 'fields': e.data['messages']}, 400
+
     def error_handler(error):
         res = error.to_json()
         res.status_code = error.status_code
