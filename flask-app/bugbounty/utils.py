@@ -6,6 +6,6 @@ def to_camelcase(s):
     return next(parts) + "".join(i.title() for i in parts)
 
 
-class CamelCaseSchema(Schema):
+class CamelSchema(Schema):
     def on_bind_field(self, field_name, field_obj):
         field_obj.data_key = to_camelcase(field_obj.data_key or field_name)
