@@ -4,6 +4,7 @@ from flask_apispec import marshal_with, use_kwargs
 from .models import Program, ProgramPolicy
 from .serializer import program_response, programs_response, register_program_policy
 from ..user.models import User
+from ...env.exceptions import Commons
 
 bp = Blueprint('programs', __name__)
 
@@ -16,8 +17,7 @@ def register_program(**kwargs):
     program = Program.get_by_id(record_id=kwargs.get('program_id'))
 
     if not writer or not program:
-        print(writer, program)
-        raise Exception('Can not find writer or program..')
+        raise Commons.resource_not_found('Can not find writer or program..')
 
     ProgramPolicy(writer=writer, program=program, **kwargs).save()
     return program
