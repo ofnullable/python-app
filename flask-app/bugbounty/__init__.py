@@ -3,6 +3,7 @@ from flask_apispec import FlaskApiSpec
 
 from bugbounty.domain.program.controller import bp as program_bp, get_programs
 from bugbounty.domain.user.controller import bp as user_bp
+from bugbounty.env.exceptions import Commons
 from bugbounty.env.extensions import db, bcrypt, cors, migrate
 from bugbounty.settings import DevConfig
 
@@ -16,6 +17,7 @@ def create_app(config=DevConfig):
 
     register_extensions(app)
     register_blueprints(app)
+    register_error_handler(app)
 
     register_router_documents(app)
 
@@ -41,6 +43,15 @@ def register_blueprints(app):
 
     app.register_blueprint(user_bp)
     app.register_blueprint(program_bp)
+
+
+def register_error_handler(app):
+    def error_handler(error):
+        res = error.to_json()
+        res.status_code = error.status_code
+        return res
+
+    app.errorhandler(Commons)(error_handler)
 
 
 def register_router_documents(app):
